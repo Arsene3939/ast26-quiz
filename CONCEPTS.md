@@ -31,7 +31,6 @@
 - `reliability/ssd-reliability` — SSD Reliability and Protection
 ## Data Systems
 - `system/btree-are-back` — B-Trees Are Back
-- `system/buffer-pool` — Buffer Pool
 - `system/data-compression` — Data Compression
 - `system/deduplication` — Deduplication
 - `system/columnar-storage` — Columnar Storage

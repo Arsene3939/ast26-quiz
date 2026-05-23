@@ -378,21 +378,6 @@ concepts:
     depends_on: []
     papers: [b-trees-are-back]
 
-  - slug: buffer-pool
-    title: "Buffer Pool"
-    description: >
-      磁碟的存取速度遠低於記憶體，因此資料庫系統需要一個 buffer pool 來將常用的 disk page 快取在記憶體中。我們需要學習各種 eviction policy（如 LRU、LRU-K、Clock、ARC）來決定記憶體不足時該優先淘汰哪些 page，並理解 dirty-page tracking 與 writeback 機制如何確保修改過的資料最終被寫回磁碟。pin/unpin protocol 則確保正在被存取的 page 不會被意外淘汰。Buffer pool 的設計直接影響資料庫的 I/O 效率，也是理解 B+Tree on disk 與 storage engine 效能調校的核心知識。
-    tier: basic
-    open: false
-    pillar: system
-    depends_on: []
-    papers:
-      - b-trees-are-back
-      - co-design-btree-zns
-      - modern-nvme
-      - duckdb-xnvme
-      - watt
-
   - slug: data-compression
     title: "Data Compression"
     description: >
