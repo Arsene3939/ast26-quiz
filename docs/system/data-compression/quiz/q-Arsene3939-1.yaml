@@ -1,7 +1,7 @@
 author: Arsene3939
 date: 2026-05-27
 question: |
-  在做 block compression 時，為了節省空間，工程師將壓縮的 block size 參數設定為非常大的 16MB 。然而，該資料庫的主要存取模式是針對個別紀錄（大小約為 4KB ）的頻繁隨機讀取（ random read ）。在不考慮作業系統快取的情況下，這個設計決策最可能在系統查詢時導致下列哪一種效能瓶頸？
+  在做 block compression 時，為了節省空間，工程師將壓縮的 block size 參數設定為非常大的 16MB 。然而，該資料庫的主要存取模式是針對個別紀錄（大小約為 4KB ）的頻繁隨機讀取。在不考慮作業系統快取的情況下，這個設計決策最可能在系統查詢時導致下列哪一種效能瓶頸？
 options:
   - text: |
       嚴重的 read amplification 與 CPU 資源浪費，因為每次只需要 4KB 的資料，系統卻必須將整個 16MB 的 block 讀入記憶體並完全解壓縮。
