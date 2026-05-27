@@ -1,22 +1,22 @@
 author: Arsene3939
 date: 2026-05-27
 question: |
-  在做 block compression 時，為了極大化儲存空間的節省，工程師將壓縮的 block size 參數設定為非常大的 16MB 。然而，該資料庫的主要存取模式是針對個別紀錄（大小約為 4KB ）的頻繁隨機讀取（ random read ）。在不考慮作業系統快取的情況下，這個設計決策最可能在系統查詢時導致下列哪一種效能瓶頸？
+  在做 block compression 時，為了節省空間，工程師將壓縮的 block size 參數設定為非常大的 16MB 。然而，該資料庫的主要存取模式是針對個別紀錄（大小約為 4KB ）的頻繁隨機讀取（ random read ）。在不考慮作業系統快取的情況下，這個設計決策最可能在系統查詢時導致下列哪一種效能瓶頸？
 options:
   - text: |
       嚴重的 read amplification 與 CPU 資源浪費，因為每次只需要 4KB 的資料，系統卻必須將整個 16MB 的 block 讀入記憶體並完全解壓縮。
     correct: true
     explanation: |
-      正確。這是 block compression 中最經典的 tradeoff。較大的 block size 確實能提供更好的 compression ratio ，但在 random access 的情境下，為了取得極小片段的資料，解壓縮演算法仍需要重建整個 block 的上下文。這會導致大量的 I/O 頻寬與 CPU 運算被浪費在解壓縮不需要的資料上。
+      正確。較大的 block size 確實能提供更好的 compression ratio ，但在 random access 的情境下，為了取得極小片段的資料，解壓縮演算法仍需要重建整個 block 的上下文。導致嚴重的 read amplification。
   - text: |
-      壓縮演算法的 metadata （例如 Huffman tree 或字典檔）將會隨之巨幅增長，最終導致 metadata 的大小超過實際資料，產生負的壓縮效益。
+      壓縮演算法的 metadata （例如 Huffman tree 或字典檔）將會隨之增長，最終導致 metadata 的大小超過實際資料，產生負的壓縮效益。
     explanation: |
-      錯誤。增加 block size 通常會**降低** metadata 的相對比例，因為更多的實體資料可以共用同一份 metadata 或字典檔。因此，擴大 block 並不會導致 metadata 暴增至超過資料本身。
+      錯誤。增加 block size 通常會**降低** metadata 的相對比例，因為更多的實體資料可以共用同一份 metadata 或字典檔。因此，擴大 block 並不會導致 metadata 增加到超過資料本身。
   - text: |
       CPU 的 L1 與 L2 cache 會因為無法容納 16MB 的資料而發生嚴重的 cache miss ，導致系統觸發硬體中斷並強制終止查詢服務。
     explanation: |
-      錯誤。雖然 16MB 的資料確實大於多數 CPU 的 L1 或 L2 快取，這會造成 cache miss 增加並稍微拖慢解壓縮速度，但現代作業系統與處理器能夠透過主記憶體（ main memory ）正常處理這些資料，絕對不會因此觸發「硬體中斷」或「強制終止」這類系統崩潰級別的錯誤。
+      錯誤。雖然 16MB 的資料確實大於多數 CPU 的 L1 或 L2 快取，這會造成 cache miss 增加並稍微拖慢解壓縮速度，但現代作業系統與處理器能夠透過主記憶體正常處理這些資料，不會因此觸發「硬體中斷」或「強制終止」這類可能導致系統崩潰的錯誤。
   - text: |
-      磁碟的循序寫入（ sequential write ）吞吐量會大幅度下降，因為硬碟控制器無法一次處理高達 16MB 的連續 I/O 請求。
+      磁碟的循序寫入吞吐量會大幅度下降，因為硬碟控制器無法一次處理高達 16MB 的連續 I/O 請求。
     explanation: |
-      錯誤。首先，現代儲存硬體（尤其是 NVMe SSD ）非常擅長處理大型的連續寫入請求；其次，因為 compression ratio 提升，實際寫入實體磁碟的總資料量反而減少了。因此，較大的 `block size` 通常對循序寫入吞吐量是有利的，真正的效能瓶頸是出在隨機讀取上。
+      錯誤。首先，現代儲存硬體（尤其是 NVMe SSD ）擅長處理大型的連續寫入請求；其次，因為 compression ratio 提升，實際寫入實體磁碟的總資料量反而減少了。因此，較大的 `block size` 通常對循序寫入吞吐量是有利的，真正的效能瓶頸是出在隨機讀取上。
